@@ -1,4 +1,5 @@
 import { Models } from '@/ai/constants'
+import { getModelOptions } from '@/ai/gateway'
 import { NextResponse } from 'next/server'
 import { generateObject } from 'ai'
 import { linesSchema, resultSchema } from '@/components/error-monitor/schemas'
@@ -12,16 +13,8 @@ export async function POST(req: Request) {
   }
 
   const result = await generateObject({
+    ...getModelOptions(Models.OpenAIGPT5),
     system: prompt,
-    model: Models.OpenAIGPT5,
-    providerOptions: {
-      openai: {
-        include: ['reasoning.encrypted_content'],
-        reasoningEffort: 'minimal',
-        reasoningSummary: 'auto',
-        serviceTier: 'priority',
-      },
-    },
     messages: [{ role: 'user', content: JSON.stringify(parsedBody.data) }],
     schema: resultSchema,
   })
