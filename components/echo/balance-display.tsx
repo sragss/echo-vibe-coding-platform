@@ -25,6 +25,7 @@ export function EchoBalanceDisplay({ isSignedIn }: Props) {
         const balanceResponse = await echoClient.balance.getBalance()
         console.log('Balance response:', balanceResponse)
         setBalance(balanceResponse.balance)
+        setError(null)
       } catch (error) {
         console.error('Failed to fetch balance:', error)
         setError(error instanceof Error ? error.message : 'Unknown error')
@@ -34,7 +35,14 @@ export function EchoBalanceDisplay({ isSignedIn }: Props) {
       }
     }
 
+    // Initial fetch
     fetchBalance()
+
+    // Set up periodic refresh every 10 seconds
+    const interval = setInterval(fetchBalance, 10000)
+
+    // Cleanup interval on unmount
+    return () => clearInterval(interval)
   }, [echoClient, isSignedIn])
 
   // Don't show anything if not signed in
