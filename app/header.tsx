@@ -1,5 +1,6 @@
 import Image from 'next/image'
 import { EchoBalanceServerWrapper } from '@/components/echo/balance-server-wrapper'
+import { Github } from 'lucide-react'
 import { cn } from '@/lib/utils'
 
 interface Props {
@@ -21,7 +22,15 @@ export async function Header({ className }: Props) {
           Vibes
         </span>
       </div>
-      <div className="flex items-center ml-auto">
+      <div className="flex items-center ml-auto space-x-3">
+        <a 
+          href="https://github.com/sragss/echo-vibe-coding-platform" 
+          target="_blank" 
+          rel="noopener noreferrer"
+          className="text-muted-foreground hover:text-foreground transition-colors"
+        >
+          <Github size={20} />
+        </a>
         <EchoBalanceServerWrapper />
       </div>
     </header>
