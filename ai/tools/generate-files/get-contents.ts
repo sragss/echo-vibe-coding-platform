@@ -1,7 +1,5 @@
-import { type OpenAIResponsesProviderOptions } from '@ai-sdk/openai'
-import { type ModelOptions } from '@/ai/gateway'
+import { getModelOptions } from '@/ai/gateway'
 import { streamObject, type ModelMessage } from 'ai'
-import { Models } from '@/ai/constants'
 import { Deferred } from '@/lib/deferred'
 import z from 'zod/v3'
 
@@ -96,34 +94,3 @@ export async function* getContents(
   }
 }
 
-function getModelOptions(modelId: string): ModelOptions {
-  if (modelId === Models.OpenAIGPT5) {
-    return {
-      model: modelId,
-      providerOptions: {
-        openai: {
-          include: ['reasoning.encrypted_content'],
-          reasoningEffort: 'minimal',
-          reasoningSummary: 'auto',
-          serviceTier: 'priority',
-        } satisfies OpenAIResponsesProviderOptions,
-      },
-    }
-  }
-
-  if (modelId === Models.AnthropicClaude4Sonnet) {
-    return {
-      model: modelId,
-      headers: { 'anthropic-beta': 'fine-grained-tool-streaming-2025-05-14' },
-      providerOptions: {
-        anthropic: {
-          cacheControl: { type: 'ephemeral' },
-        },
-      },
-    }
-  }
-
-  return {
-    model: modelId,
-  }
-}

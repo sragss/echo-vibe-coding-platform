@@ -1,13 +1,15 @@
 export enum Models {
   AnthropicClaude4Sonnet = 'anthropic/claude-4-sonnet',
   OpenAIGPT5 = 'gpt-5',
+  GoogleGemini25Flash = 'google/gemini-2.5-flash',
 }
 
-export const DEFAULT_MODEL = Models.OpenAIGPT5
+export const DEFAULT_MODEL = Models.AnthropicClaude4Sonnet
 
 export const SUPPORTED_MODELS: string[] = [
   Models.AnthropicClaude4Sonnet,
   Models.OpenAIGPT5,
+  Models.GoogleGemini25Flash,
 ]
 
 export const TEST_PROMPTS = [
