@@ -2,20 +2,17 @@ import type { JSONValue } from 'ai'
 import type { OpenAIResponsesProviderOptions } from '@ai-sdk/openai'
 import { createGatewayProvider } from '@ai-sdk/gateway'
 import { Models } from './constants'
-
-const gateway = createGatewayProvider({
-  baseURL: process.env.AI_GATEWAY_BASE_URL,
-})
+import { openai as echoOpenAI } from '@/src/echo'
 
 export async function getAvailableModels() {
-  const response = await gateway.getAvailableModels()
-  return response.models
-    .map((model) => ({ id: model.id, name: model.name }))
-    .concat([{ id: Models.OpenAIGPT5, name: 'GPT-5' }])
+  return [
+    { id: Models.AnthropicClaude4Sonnet, name: 'Claude 4 Sonnet' },
+    { id: Models.OpenAIGPT5, name: 'GPT-5' }
+  ]
 }
 
 export interface ModelOptions {
-  model: string
+  model: any // Echo provider or string
   providerOptions?: Record<string, Record<string, JSONValue>>
   headers?: Record<string, string>
 }
@@ -26,7 +23,7 @@ export function getModelOptions(
 ): ModelOptions {
   if (modelId === Models.OpenAIGPT5) {
     return {
-      model: modelId,
+      model: echoOpenAI('gpt-5'),
       providerOptions: {
         openai: {
           include: ['reasoning.encrypted_content'],
