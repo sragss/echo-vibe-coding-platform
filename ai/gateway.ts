@@ -2,7 +2,7 @@ import type { JSONValue } from 'ai'
 import type { OpenAIResponsesProviderOptions } from '@ai-sdk/openai'
 import { createGatewayProvider } from '@ai-sdk/gateway'
 import { Models } from './constants'
-import { openai as echoOpenAI } from '@/src/echo'
+import { openai as echoOpenAI, anthropic as echoAnthropic } from '@/src/echo'
 
 export async function getAvailableModels() {
   return [
@@ -37,7 +37,7 @@ export function getModelOptions(
 
   if (modelId === Models.AnthropicClaude4Sonnet) {
     return {
-      model: modelId,
+      model: echoAnthropic('claude-sonnet-4-20250514'),
       headers: { 'anthropic-beta': 'fine-grained-tool-streaming-2025-05-14' },
       providerOptions: {
         anthropic: {
