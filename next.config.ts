@@ -25,6 +25,12 @@ const nextConfig: NextConfig = {
         port: '',
         pathname: '/api/www/avatar/**',
       },
+      {
+        protocol: 'https',
+        hostname: 'echo.merit.systems',
+        port: '',
+        pathname: '/logo/**',
+      },
     ],
     dangerouslyAllowSVG: true,
     contentDispositionType: 'attachment',
