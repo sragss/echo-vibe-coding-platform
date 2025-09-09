@@ -69,6 +69,10 @@ export async function POST(req: Request) {
           onError: (error) => {
             console.error('Error communicating with AI')
             console.error(JSON.stringify(error, null, 2))
+            if (error.status === 402 || error.statusCode === 402 || error.code === 402) {
+              return 'PAYMENT_REQUIRED'
+            }
+            return 'An error occurred'
           },
         })
         result.consumeStream()

@@ -2,6 +2,7 @@ import { NuqsAdapter } from 'nuqs/adapters/next/app'
 import { ChatProvider } from '@/lib/chat-context'
 import { CommandLogsStream } from '@/components/commands-logs/commands-logs-stream'
 import { ErrorMonitor } from '@/components/error-monitor/error-monitor'
+import { OutOfFundsModal } from '@/components/modals/out-of-funds-modal'
 import { SandboxState } from '@/components/modals/sandbox-state'
 import { Toaster } from '@/components/ui/sonner'
 import type { ReactNode } from 'react'
@@ -59,6 +60,7 @@ export default function RootLayout({
         <Toaster />
         <CommandLogsStream />
         <SandboxState />
+        <OutOfFundsModal />
       </body>
     </html>
   )
