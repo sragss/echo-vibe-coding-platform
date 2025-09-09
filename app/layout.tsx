@@ -31,6 +31,9 @@ export const metadata: Metadata = {
     images: [
       {
         url: '/og.png',
+        width: 1344,
+        height: 768,
+        alt: 'Vibes - End-to-end coding platform',
       },
     ],
   },
@@ -39,6 +42,9 @@ export const metadata: Metadata = {
     images: [
       {
         url: '/og.png',
+        width: 1344,
+        height: 768,
+        alt: 'Vibes - End-to-end coding platform',
       },
     ],
   },
