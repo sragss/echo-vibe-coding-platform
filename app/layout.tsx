@@ -14,11 +14,20 @@ const title = 'Vibes'
 const description = `This is a demo of an end-to-end coding platform where the user can enter text prompts, and the agent will create a full stack application. It uses Vercel's AI Cloud services like Sandbox for secure code execution, AI Gateway for GPT-5 and other models support, Fluid Compute for efficient rendering and streaming, and it's built with Next.js and the AI SDK.`
 
 export const metadata: Metadata = {
-  metadataBase: process.env.VERCEL_PROJECT_PRODUCTION_URL 
-    ? new URL(`https://${process.env.VERCEL_PROJECT_PRODUCTION_URL}`)
-    : new URL(`http://localhost:${process.env.PORT || 3000}`),
+  metadataBase: new URL('https://echo-vibe-coding-platform.vercel.app'),
   title,
   description,
+  openGraph: {
+    title,
+    description,
+    images: ['/opengraph-image.png'],
+  },
+  twitter: {
+    card: 'summary_large_image',
+    title,
+    description,
+    images: ['/twitter-image.png'],
+  },
   icons: {
     icon: [
       { url: '/favicon-16x16.png', sizes: '16x16', type: 'image/png' },
@@ -30,27 +39,6 @@ export const metadata: Metadata = {
     ],
   },
   manifest: '/site.webmanifest',
-  openGraph: {
-    images: [
-      {
-        url: '/og.png',
-        width: 1344,
-        height: 768,
-        alt: 'Vibes - End-to-end coding platform',
-      },
-    ],
-  },
-  twitter: {
-    card: 'summary_large_image',
-    images: [
-      {
-        url: '/og.png',
-        width: 1344,
-        height: 768,
-        alt: 'Vibes - End-to-end coding platform',
-      },
-    ],
-  },
 }
 
 export default function RootLayout({
