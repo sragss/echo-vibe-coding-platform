@@ -30,7 +30,7 @@ export const metadata: Metadata = {
   openGraph: {
     images: [
       {
-        url: 'https://assets.vercel.com/image/upload/v1754588799/OSSvibecodingplatform/OG.png',
+        url: '/og.png',
       },
     ],
   },
@@ -38,7 +38,7 @@ export const metadata: Metadata = {
     card: 'summary_large_image',
     images: [
       {
-        url: 'https://assets.vercel.com/image/upload/v1754588799/OSSvibecodingplatform/OG.png',
+        url: '/og.png',
       },
     ],
   },
