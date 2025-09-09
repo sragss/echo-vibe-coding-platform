@@ -5,7 +5,8 @@ export function useSettings() {
   const [modelId] = useModelId()
   const [fixErrors] = useFixErrors()
   const [reasoningEffort] = useReasoningEffort()
-  return { modelId, fixErrors, reasoningEffort }
+  const [stimLoading] = useStimLoading()
+  return { modelId, fixErrors, reasoningEffort, stimLoading }
 }
 
 export function useModelId() {
@@ -26,4 +27,8 @@ export function useReasoningEffort() {
 
 export function useFixErrors() {
   return useQueryState('fix-errors', parseAsBoolean.withDefault(true))
+}
+
+export function useStimLoading() {
+  return useQueryState('stim-loading', parseAsBoolean.withDefault(true))
 }
