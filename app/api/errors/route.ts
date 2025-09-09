@@ -23,9 +23,12 @@ export async function POST(req: Request) {
     return NextResponse.json(result.object, {
       status: 200,
     })
-  } catch (error: any) {
-    if (error.status === 402 || error.statusCode === 402 || error.code === 402) {
-      return NextResponse.json({ error: 'Payment required' }, { status: 402 })
+  } catch (error: unknown) {
+    if (error && typeof error === 'object' && ('status' in error || 'statusCode' in error || 'code' in error)) {
+      const errorObj = error as { status?: number; statusCode?: number; code?: number }
+      if (errorObj.status === 402 || errorObj.statusCode === 402 || errorObj.code === 402) {
+        return NextResponse.json({ error: 'Payment required' }, { status: 402 })
+      }
     }
     throw error
   }

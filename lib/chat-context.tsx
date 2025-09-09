@@ -26,27 +26,27 @@ export function ChatProvider({ children }: { children: ReactNode }) {
   const chat = useMemo(
     () =>
       new Chat<ChatUIMessage>({
-        api: '/api/chat',
         onToolCall: () => mutate('/api/auth/info'),
         onData: (data: DataUIPart<DataPart>) => mapDataToStateRef.current(data),
         onError: (error) => {
           console.error('Chat onError:', error)
+          const errorObj = error as { status?: number; statusCode?: number; code?: number; message?: string; response?: unknown }
           console.error('Error details:', {
-            status: error.status,
-            statusCode: error.statusCode,
-            code: error.code,
-            message: error.message,
-            response: error.response
+            status: errorObj.status,
+            statusCode: errorObj.statusCode,
+            code: errorObj.code,
+            message: errorObj.message,
+            response: errorObj.response
           })
           
           // Check for 402 status codes
-          if (error.status === 402 || error.statusCode === 402 || error.code === 402) {
+          if (errorObj.status === 402 || errorObj.statusCode === 402 || errorObj.code === 402) {
             showOutOfFundsModal()
             return
           }
           
           // Check for payment required in message content
-          const errorMsg = error.message || ''
+          const errorMsg = errorObj.message || ''
           if (errorMsg.includes('PAYMENT_REQUIRED') || 
               errorMsg.includes('Payment required') || 
               errorMsg.includes('payment required') ||
@@ -55,15 +55,8 @@ export function ChatProvider({ children }: { children: ReactNode }) {
             return
           }
           
-          toast.error(`Communication error with the AI: ${error.message}`)
+          toast.error(`Communication error with the AI: ${errorObj.message || 'Unknown error'}`)
           console.error('Error sending message:', error)
-        },
-        onResponse: async (response) => {
-          console.log('Chat onResponse:', response.status, response.statusText)
-          if (response.status === 402) {
-            showOutOfFundsModal()
-            return
-          }
         }
       }),
     [showOutOfFundsModal]

@@ -31,7 +31,7 @@ export function EchoSignInModal() {
           </Button>
           
           <p className="text-xs font-light text-gray-500 text-center">
-            Forked from Vercel's{' '}
+            Forked from Vercel&apos;s{' '}
             <a 
               href="https://github.com/vercel/examples/tree/main/apps/vibe-coding-platform" 
               target="_blank" 

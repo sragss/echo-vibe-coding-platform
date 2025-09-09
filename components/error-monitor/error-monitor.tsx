@@ -92,8 +92,8 @@ export function ErrorMonitor({ children, debounceTimeMs = 10000 }: Props) {
             parts: [{ type: 'data-report-errors', data: summary }],
           })
         }
-      } catch (error: any) {
-        if (error.status === 402) {
+      } catch (error: unknown) {
+        if (error && typeof error === 'object' && 'status' in error && (error as { status: number }).status === 402) {
           showOutOfFundsModal()
           return
         }

@@ -69,10 +69,12 @@ export async function POST(req: Request) {
           onError: (error) => {
             console.error('Error communicating with AI')
             console.error(JSON.stringify(error, null, 2))
-            if (error.status === 402 || error.statusCode === 402 || error.code === 402) {
-              return 'PAYMENT_REQUIRED'
+            
+            // For 402 errors, we'll handle them in the client-side error handling
+            const errorObj = error.error as { status?: number; statusCode?: number; code?: number }
+            if (errorObj && (errorObj.status === 402 || errorObj.statusCode === 402 || errorObj.code === 402)) {
+              console.error('Payment required - user out of funds')
             }
-            return 'An error occurred'
           },
         })
         result.consumeStream()

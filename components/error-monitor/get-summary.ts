@@ -8,7 +8,7 @@ export async function getSummary(lines: Line[], previous: Line[]) {
 
   if (response.status === 402) {
     const error = new Error('Payment required')
-    ;(error as any).status = 402
+    ;(error as unknown as { status: number }).status = 402
     throw error
   }
 
