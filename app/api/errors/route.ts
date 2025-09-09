@@ -12,14 +12,24 @@ export async function POST(req: Request) {
     return NextResponse.json({ error: `Invalid request` }, { status: 400 })
   }
 
-  const result = await generateObject({
-    ...getModelOptions(Models.OpenAIGPT5),
-    system: prompt,
-    messages: [{ role: 'user', content: JSON.stringify(parsedBody.data) }],
-    schema: resultSchema,
-  })
+  try {
+    const result = await generateObject({
+      ...getModelOptions(Models.OpenAIGPT5),
+      system: prompt,
+      messages: [{ role: 'user', content: JSON.stringify(parsedBody.data) }],
+      schema: resultSchema,
+    })
 
-  return NextResponse.json(result.object, {
-    status: 200,
-  })
+    return NextResponse.json(result.object, {
+      status: 200,
+    })
+  } catch (error: unknown) {
+    if (error && typeof error === 'object' && ('status' in error || 'statusCode' in error || 'code' in error)) {
+      const errorObj = error as { status?: number; statusCode?: number; code?: number }
+      if (errorObj.status === 402 || errorObj.statusCode === 402 || errorObj.code === 402) {
+        return NextResponse.json({ error: 'Payment required' }, { status: 402 })
+      }
+    }
+    throw error
+  }
 }

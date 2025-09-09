@@ -11,7 +11,7 @@ import {
 } from 'react'
 import { getSummary } from './get-summary'
 import { useChat } from '@ai-sdk/react'
-import { useCommandErrorsLogs } from '@/app/state'
+import { useCommandErrorsLogs, useSandboxStore } from '@/app/state'
 import { useMonitorState } from './state'
 import { useSettings } from '@/components/settings/use-settings'
 import { useSharedChatContext } from '@/lib/chat-context'
@@ -28,6 +28,7 @@ export function ErrorMonitor({ children, debounceTimeMs = 10000 }: Props) {
   const { fixErrors } = useSettings()
   const { chat } = useSharedChatContext()
   const { sendMessage, status: chatStatus, messages } = useChat({ chat })
+  const { showOutOfFundsModal } = useSandboxStore()
   const submitTimeout = useRef<NodeJS.Timeout | null>(null)
   const inspectedErrors = useRef<number>(0)
   const lastReportedErrors = useRef<string[]>([])
@@ -76,19 +77,27 @@ export function ErrorMonitor({ children, debounceTimeMs = 10000 }: Props) {
     }
 
     startTransition(async () => {
-      const summary = await getSummary(errors, prev)
-      if (summary.shouldBeFixed) {
-        newErrors.forEach((key) => {
-          errorReportCount.current.set(key, 1)
-        })
+      try {
+        const summary = await getSummary(errors, prev)
+        if (summary.shouldBeFixed) {
+          newErrors.forEach((key) => {
+            errorReportCount.current.set(key, 1)
+          })
 
-        lastReportedErrors.current = newErrors
-        lastErrorReportTime.current = Date.now()
+          lastReportedErrors.current = newErrors
+          lastErrorReportTime.current = Date.now()
 
-        sendMessage({
-          role: 'user',
-          parts: [{ type: 'data-report-errors', data: summary }],
-        })
+          sendMessage({
+            role: 'user',
+            parts: [{ type: 'data-report-errors', data: summary }],
+          })
+        }
+      } catch (error: unknown) {
+        if (error && typeof error === 'object' && 'status' in error && (error as { status: number }).status === 402) {
+          showOutOfFundsModal()
+          return
+        }
+        throw error
       }
     })
   }

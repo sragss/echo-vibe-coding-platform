@@ -13,12 +13,15 @@ interface SandboxStore {
   clearGeneratedFiles: () => void
   commands: Command[]
   generatedFiles: Set<string>
+  outOfFundsModalOpen: boolean
   paths: string[]
   sandboxId?: string
   setChatStatus: (status: ChatStatus) => void
+  setOutOfFundsModalOpen: (open: boolean) => void
   setSandboxId: (id: string) => void
   setStatus: (status: 'running' | 'stopped') => void
   setUrl: (url: string, uuid: string) => void
+  showOutOfFundsModal: () => void
   status?: 'running' | 'stopped'
   upsertCommand: (command: Omit<Command, 'startedAt'>) => void
   url?: string
@@ -69,11 +72,13 @@ export const useSandboxStore = create<SandboxStore>()((set) => ({
   clearGeneratedFiles: () => set(() => ({ generatedFiles: new Set<string>() })),
   commands: [],
   generatedFiles: new Set<string>(),
+  outOfFundsModalOpen: false,
   paths: [],
   setChatStatus: (status) =>
     set((state) =>
       state.chatStatus === status ? state : { chatStatus: status }
     ),
+  setOutOfFundsModalOpen: (open) => set(() => ({ outOfFundsModalOpen: open })),
   setSandboxId: (sandboxId) =>
     set(() => ({
       sandboxId,
@@ -85,6 +90,7 @@ export const useSandboxStore = create<SandboxStore>()((set) => ({
     })),
   setStatus: (status) => set(() => ({ status })),
   setUrl: (url, urlUUID) => set(() => ({ url, urlUUID })),
+  showOutOfFundsModal: () => set(() => ({ outOfFundsModalOpen: true })),
   upsertCommand: (cmd) => {
     set((state) => {
       const existingIdx = state.commands.findIndex((c) => c.cmdId === cmd.cmdId)

@@ -6,6 +6,12 @@ export async function getSummary(lines: Line[], previous: Line[]) {
     method: 'POST',
   })
 
+  if (response.status === 402) {
+    const error = new Error('Payment required')
+    ;(error as unknown as { status: number }).status = 402
+    throw error
+  }
+
   if (!response.ok) {
     throw new Error(`Failed to fetch errors summary: ${response.statusText}`)
   }

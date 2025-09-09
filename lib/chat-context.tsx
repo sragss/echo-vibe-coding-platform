@@ -6,7 +6,7 @@ import { Chat } from '@ai-sdk/react'
 import { DataPart } from '@/ai/messages/data-parts'
 import { DataUIPart } from 'ai'
 import { createContext, useContext, useMemo, useRef } from 'react'
-import { useDataStateMapper } from '@/app/state'
+import { useDataStateMapper, useSandboxStore } from '@/app/state'
 import { mutate } from 'swr'
 import { toast } from 'sonner'
 
@@ -21,17 +21,45 @@ export function ChatProvider({ children }: { children: ReactNode }) {
   const mapDataToStateRef = useRef(mapDataToState)
   mapDataToStateRef.current = mapDataToState
 
+  const { showOutOfFundsModal } = useSandboxStore()
+
   const chat = useMemo(
     () =>
       new Chat<ChatUIMessage>({
         onToolCall: () => mutate('/api/auth/info'),
         onData: (data: DataUIPart<DataPart>) => mapDataToStateRef.current(data),
         onError: (error) => {
-          toast.error(`Communication error with the AI: ${error.message}`)
+          console.error('Chat onError:', error)
+          const errorObj = error as { status?: number; statusCode?: number; code?: number; message?: string; response?: unknown }
+          console.error('Error details:', {
+            status: errorObj.status,
+            statusCode: errorObj.statusCode,
+            code: errorObj.code,
+            message: errorObj.message,
+            response: errorObj.response
+          })
+          
+          // Check for 402 status codes
+          if (errorObj.status === 402 || errorObj.statusCode === 402 || errorObj.code === 402) {
+            showOutOfFundsModal()
+            return
+          }
+          
+          // Check for payment required in message content
+          const errorMsg = errorObj.message || ''
+          if (errorMsg.includes('PAYMENT_REQUIRED') || 
+              errorMsg.includes('Payment required') || 
+              errorMsg.includes('payment required') ||
+              errorMsg === 'Payment Required') {
+            showOutOfFundsModal()
+            return
+          }
+          
+          toast.error(`Communication error with the AI: ${errorObj.message || 'Unknown error'}`)
           console.error('Error sending message:', error)
-        },
+        }
       }),
-    []
+    [showOutOfFundsModal]
   )
 
   return (
