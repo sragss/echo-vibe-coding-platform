@@ -46,6 +46,17 @@ export default function RootLayout({
 }: Readonly<{ children: ReactNode }>) {
   return (
     <html lang="en">
+      <head>
+        <meta property="og:title" content="Vibes" />
+        <meta property="og:description" content="This is a demo of an end-to-end coding platform where the user can enter text prompts, and the agent will create a full stack application." />
+        <meta property="og:image" content="https://echo-vibe-coding-platform.vercel.app/og.png" />
+        <meta property="og:image:width" content="1344" />
+        <meta property="og:image:height" content="768" />
+        <meta name="twitter:card" content="summary_large_image" />
+        <meta name="twitter:title" content="Vibes" />
+        <meta name="twitter:description" content="This is a demo of an end-to-end coding platform where the user can enter text prompts, and the agent will create a full stack application." />
+        <meta name="twitter:image" content="https://echo-vibe-coding-platform.vercel.app/og.png" />
+      </head>
       <body className="antialiased">
         <Suspense fallback={null}>
           <NuqsAdapter>
